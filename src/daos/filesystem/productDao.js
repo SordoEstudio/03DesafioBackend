@@ -2,7 +2,7 @@ import { __dirname } from "../../path.js";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 
-const path = `${__dirname}/data/products.json`
+const path = `${__dirname}/data/products.json`;
 
 export default class ProductDaoFs {
   constructor(path) {
@@ -24,30 +24,47 @@ export default class ProductDaoFs {
 
   async create(obj) {
     try {
-        const { title, description, price, code, stock, category } = obj;
-        if (!title || !description || !price || !stock|| !category || !code) {
-          console.log("Todos los campos son olbigatorios");
-          return;
-        }
-       const product = {
+      const {
+        title,
+        description,
+        price,
+        thumbnail,
+        code,
+        stock,
+        category,
+      } = obj;
+      if (
+        !title ||
+        !description ||
+        !price ||
+        !thumbnail ||
+        !stock ||
+        !category ||
+        !code 
+      ) {
+        console.log("Todos los campos son olbigatorios");
+        return;
+      }
+      const product = {
         id: uuidv4(),
-        status:true,
+        status: true,
         ...obj,
       };
       const products = await this.getAll();
       const codeExist = products.some((p) => p.code == product.code);
       if (codeExist) {
-          console.log("Product code already exist")
-          return 
-        }
-     else{ products.push(product);
-      await fs.promises.writeFile(this.path, JSON.stringify(products));
-      return product;}
+        console.log("Product code already exist");
+        return;
+      } else {
+        products.push(product);
+        await fs.promises.writeFile(this.path, JSON.stringify(products));
+        return product;
+      }
     } catch (error) {
       console.log(error);
     }
   }
-  async update(obj, id) {
+  async update(id, obj) {
     try {
       const products = await this.getAll();
       const productIndex = products.findIndex((p) => p.id === id);
@@ -59,11 +76,14 @@ export default class ProductDaoFs {
         ...obj,
       };
       await fs.promises.writeFile(this.path, JSON.stringify(products));
-      return obj;
+      return products[productIndex];
     } catch (error) {
-      console.log(error);
+      // Log de cualquier error que ocurra
+      console.log("Error updating product:", error);
+      throw new Error("Error updating product");
     }
   }
+
   async remove(id) {
     const products = await this.getAll();
     if (products.length > 0) {
@@ -71,14 +91,14 @@ export default class ProductDaoFs {
       if (productExist) {
         const newProducts = products.filter((p) => p.id !== id);
         await fs.promises.writeFile(this.path, JSON.stringify(newProducts));
-        return productExist
-      } 
-    } else return null
+        return productExist;
+      }
+    } else return null;
   }
   async getById(id) {
     try {
       const products = await this.getAll();
-      const productExist = products.find((p) => p.id === parseInt(id));
+      const productExist = products.find((p) => p.id === id);
       if (!productExist) return null;
       return productExist;
     } catch (error) {

@@ -3,7 +3,7 @@
 //import CartDaoFs from "../daos/filesystem/cartDao.js"
 //import ProductDaoFs from "../daos/filesystem/productDao.js"
 //const cartDao = new CartDaoFs(`${__dirname}/data/carts.json`)
-//const productDao = new ProductDaoFs(`${__dirname}/data/products.json`)
+//const prodDao = new ProductDaoFs(`${__dirname}/data/products.json`)
 //------------------------------------------------------------------//
 //-------------------------| Dao de Mongo |-------------------------//
 import CartDaoMongoDb from "../daos/mongodb/cartDao.js";

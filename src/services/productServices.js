@@ -1,12 +1,20 @@
 //----------------------| Dao de File System |----------------------//
-//import {__dirname } from "../path"
-//import ProductDaoFs from "../daos/filesystem/productDao"
-//const prodDao = new ProductDaoFs(`${__dirname}/data/products.json`)
-//------------------------------------------------------------------//
+import {__dirname } from "../path.js"
+import ProductDaoFs from "../daos/filesystem/productDao.js"
+const daoFs = new ProductDaoFs(`${__dirname}/data/products.json`)
 //-------------------------| Dao de Mongo |-------------------------//
 import ProductDaoMongoDb from '../daos/mongodb/productDao.js'
-const prodDao = new ProductDaoMongoDb()
+const daoMongo = new ProductDaoMongoDb()
 //------------------------------------------------------------------//
+import "dotenv/config";
+let prodDao
+
+if (process.env.PERSISTENCE === "MONGO") {
+     prodDao = daoMongo
+}else{
+    prodDao = daoFs
+}
+
 
 export const getAll = async()=>{
     try {
