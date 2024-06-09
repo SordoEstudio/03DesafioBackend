@@ -3,14 +3,16 @@ import * as controller from '../controllers/cartControllers.js'
 
 const router = Router();
 
-router.get("/", controller.getAll)
+router.post("/", controller.create)
 
-router.get("/:id", controller.getById) 
+router.get("/:cId", controller.getById) 
 
-router.post("/file", controller.create)
+router.post("/:cId/products/:pId", controller.addProductToCart) 
 
-router.post("/add/:cId/:pId", controller.addProductToCart) 
+router.delete("/:cId/products/:pId", controller.removeProductToCart)
 
-router.delete("/:id", controller.remove)
+router.put("/:cId/products/:pId", controller.updateProductQuantity)
+
+router.put("/:cId", controller.update) 
 
 export default router;
